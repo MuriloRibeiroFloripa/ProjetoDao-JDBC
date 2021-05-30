@@ -32,8 +32,15 @@ INSERT INTO Vendedor (Nome, Email, DataNascimento, BaseSalario, DepartamentoId) 
   ('Donald Blue','donald@gmail.com','2000-01-09 00:00:00',4000,3),
   ('Alex Santana','alex@gmail.com','1997-03-04 00:00:00',3000,2);
   
-  -- busca departamento por id:
+   -- busca por id:
 SELECT vendedor.*,departamento.Nome as DepNome
 FROM vendedor INNER JOIN departamento
 ON vendedor.DepartamentoId = departamento.Id
 WHERE vendedor.Id = 1;
+
+ -- busca por id do departamento
+SELECT vendedor.*,departamento.Nome as DepNome
+FROM vendedor INNER JOIN departamento
+ON vendedor.DepartamentoId = departamento.Id
+WHERE DepartamentoId = 2
+ORDER BY Nome;

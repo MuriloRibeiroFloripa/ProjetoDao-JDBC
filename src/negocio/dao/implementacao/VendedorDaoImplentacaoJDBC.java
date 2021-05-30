@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -112,5 +115,69 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 	public List<Vendedor> buscaTodos() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	// Busca todos departamentos pelo id
+	@Override
+	public List<Vendedor> buscaTodosDepartamentos(Departamento departamento) {
+		PreparedStatement st = null;
+		ResultSet rs = null; // Tras os dados em formato tabela
+		try {
+			st = conn.prepareStatement(
+					"SELECT vendedor.*,departamento.Nome as DepNome "
+					+ "FROM vendedor INNER JOIN departamento "
+					+ "ON vendedor.DepartamentoId = departamento.Id "
+					+ "WHERE DepartamentoId = ? "
+					+ "ORDER BY Nome;");			
+			st.setInt(1, departamento.getId());
+			//executa minha Query;
+			rs = st.executeQuery();
+			
+			// Declarando a lista para receber os resultados da execução da Query
+			List<Vendedor> list = new ArrayList<>();
+			
+			// função map para controlar a referencia para departamento para não se repetir, 
+			// Sem multiplicar os departamentos, e sim referenciar o objeto Certo na memoria.
+			// estrutura map vazia com chave Integer do Id e Valor Departamento
+			Map<Integer, Departamento> map = new HashMap<>();
+			
+			// Percorrer os resultados enquanto tiver um proximo
+			while(rs.next()) { 
+
+				// Controle para não repetir o departamento testando se ele ja existe
+				// Guardando na estrutura Map, qualquer departamento que for instanciado.
+				// Pela estrutura while e com get ele verifica o id do departamento.
+				// reaproveita o departamento se ele ja existe.
+				Departamento dep =  map.get(rs.getInt("DepartamentoId"));
+				
+				// se o retorno da instanciação do objeto Departamento dep for null
+				// porem se ele ja existir o map, vai pegar ele.
+				if (dep == null) {
+					// instancia o departamento
+					dep = instanciaDepartamento(rs);
+					// guarda dentro do Map o departamento
+					map.put(rs.getInt("DepartamentoId"), dep);
+				}
+				
+				// Intancia o vendedor apontando para dep
+				// seja ele existente ou novo departamento criado
+				Vendedor obj = instanciaVendedor(rs, dep);
+
+				// adciona o vendedor na lista.
+				list.add(obj);
+			}
+			// Depois de adicionar todos na lista
+			// Retorna a lista;
+			return list;
+
+		// Capturando SQLexception, lanca exception personalizada.
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage()); // lança exceção personalizada
+		}
+		// fechando os recursos st, rs
+		finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
 	}
 }
