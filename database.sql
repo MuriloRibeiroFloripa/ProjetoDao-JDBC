@@ -50,3 +50,9 @@ SELECT vendedor.*,departamento.Nome as DepNome
 FROM vendedor INNER JOIN departamento
 ON vendedor.DepartamentoId = departamento.Id
 ORDER BY Nome;
+
+-- Inserindo Venderes
+INSERT INTO vendedor
+(Nome, Email, DataNascimento, BaseSalario, DepartamentoId)
+VALUES
+('Carl Teixeira','carl@gmail.com','1988-01-15 00:00:00',2.500,4);

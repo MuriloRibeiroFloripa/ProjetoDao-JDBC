@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +34,50 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 	}
 
 	// Implementação dos metodos
+	
+	// Inserir Vendedor
 	@Override
 	public void inserir(Vendedor obj) {
-		// TODO Auto-generated method stub
-
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(
+					"INSERT INTO vendedor "
+					+ "(Nome, Email, DataNascimento, BaseSalario, DepartamentoId) "
+					+ "VALUES "
+					+ "(?,?,?,?,?)", 
+					Statement.RETURN_GENERATED_KEYS);// Coloca o Id do novo vendedor inserido.
+			//Configuração dos ? (interrogações);
+			st.setString(1, obj.getNome());
+			st.setString(2, obj.getEmail());
+			st.setDate(3, new java.sql.Date(obj.getdataNascimento().getTime()));
+			st.setDouble(4, obj.getBaseSalarial());
+			st.setInt(5, obj.getDepartamento().getId()); // apartir do departamento que eu acesso o Id, navegando Obj
+			
+			// executar
+			int linhasAfetadas = st.executeUpdate();
+			
+			// testando
+			if (linhasAfetadas > 0) {
+				ResultSet rs = st.getGeneratedKeys();
+				if(rs.next()) {
+					int id = rs.getInt(1);
+					obj.setId(id);
+				}
+				// Fechando o recurso ResultSet
+				DB.closeResultSet(rs);
+			}
+			// lancando exceção caso ocorra.
+			else {
+				throw new DbException("Erro Inesperado! Nenhuma Linha foi Afetada!");
+			}
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		//Fechando o recurso Startement
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
