@@ -1,5 +1,6 @@
 package negocio.dao;
 
+import db.DB;
 import negocio.dao.implementacao.VendedorDaoImplentacaoJDBC;
 
 /*
@@ -14,6 +15,6 @@ public class FabricaDao {
 	// porem internamente ela vai instanciar uma  implementação.
 	// Massete para não precisa expor a implementação, deixar  somente a interface
 	public static VendedorDao criarVendedorDao() {
-		return  new VendedorDaoImplentacaoJDBC();
+		return  new VendedorDaoImplentacaoJDBC(DB.getConnection());
 	}
 }
