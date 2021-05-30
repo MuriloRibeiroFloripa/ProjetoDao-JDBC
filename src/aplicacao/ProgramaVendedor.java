@@ -28,5 +28,14 @@ public class ProgramaVendedor {
 		for (Vendedor obj : list) {
 			System.out.println(obj);
 		}
+
+		// busca por todos os vendedores da Lista
+		System.out.println("\n======== Teste 3: Busca Todos os vendedores da Lista ========");
+		// como estou aproveitando a variavel da lista não precisa de outra variavel para armazenar essa nova lista
+		list = vendedorDao.buscaTodos();
+		// para testar preciso for para percorrer a lista
+		for (Vendedor obj : list) {
+			System.out.println(obj);
+		}
 	}
 }

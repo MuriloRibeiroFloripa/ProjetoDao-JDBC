@@ -44,3 +44,9 @@ FROM vendedor INNER JOIN departamento
 ON vendedor.DepartamentoId = departamento.Id
 WHERE DepartamentoId = 2
 ORDER BY Nome;
+
+-- busca todos os departamentos
+SELECT vendedor.*,departamento.Nome as DepNome
+FROM vendedor INNER JOIN departamento
+ON vendedor.DepartamentoId = departamento.Id
+ORDER BY Nome;
