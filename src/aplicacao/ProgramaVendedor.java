@@ -4,7 +4,7 @@ import negocio.dao.FabricaDao;
 import negocio.dao.VendedorDao;
 import negocio.entidade.Vendedor;
 
-public class Programa {
+public class ProgramaVendedor {
 
 	// Metodo Principal
 	public static void main(String[] args) {
