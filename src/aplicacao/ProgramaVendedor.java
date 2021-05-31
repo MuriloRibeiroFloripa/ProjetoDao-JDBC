@@ -2,6 +2,7 @@ package aplicacao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import negocio.dao.FabricaDao;
 import negocio.dao.VendedorDao;
@@ -13,6 +14,8 @@ public class ProgramaVendedor {
 	// Metodo Principal
 	public static void main(String[] args) {
 
+		Scanner sc = new Scanner(System.in);
+		
 		// instanciado a fabricaDao
 		VendedorDao vendedorDao = FabricaDao.criarVendedorDao();
 
@@ -52,5 +55,12 @@ public class ProgramaVendedor {
 		vendedor.setNome("joao Batista da Silva"); // definindo para alterar
 		vendedorDao.atualizar(vendedor);
 		System.out.println("Atualizado com Sucesso!");
+	
+		// Apaga o vendedor pelo id informado
+		System.out.println("\n======== Teste 6: Apaga o Vendedor ========");
+		System.out.println("Entre com o Id do vendedor a ser apagado: ");
+		int id = sc.nextInt();
+		vendedorDao.apagarPorId(id);		
+		sc.close();		
 	}
 }

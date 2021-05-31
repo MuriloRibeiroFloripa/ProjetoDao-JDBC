@@ -12,7 +12,7 @@ public interface VendedorDao {
 	// Para manipular os Atributos dos Vendedores.
 	void inserir(Vendedor obj);
 	void atualizar(Vendedor obj);
-	void apagarPorId(Vendedor id);
+	void apagarPorId(Integer id);
 	Vendedor buscaPorId(Integer id);
 	//Busca todos, assinatura do metodo.
 	List<Vendedor> buscaTodos();

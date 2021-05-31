@@ -105,11 +105,32 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 			DB.closeStatement(st);
 		}
 	}
-
+	// Apaga o vendedor pelo seu Id
 	@Override
-	public void apagarPorId(Vendedor id) {
-		// TODO Auto-generated method stub
-
+	public void apagarPorId(Integer id) {
+		PreparedStatement st = null;
+			try {
+				st = conn.prepareStatement("DELETE FROM vendedor WHERE Id = ?");
+				
+				// configurar o valor do placeholder "?".
+				st.setInt(1, id);
+				
+				int linhas = st.executeUpdate();
+				
+				if(linhas == 0) {
+					System.out.println("Vendedor Informado não existe nos BD ");
+				}
+				else {
+					System.out.println("Vendedor Deletado com Sucesso!");
+				}
+			}
+			catch (SQLException e){
+				throw new DbException(e.getMessage()); // lança exceção personalizada
+	}
+	// fechando os recursos st
+	finally {
+		DB.closeStatement(st);
+		}
 	}
 
 	@Override
