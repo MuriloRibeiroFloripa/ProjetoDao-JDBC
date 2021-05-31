@@ -16,11 +16,11 @@ public class ProgramaVendedor {
 		// instanciado a fabricaDao
 		VendedorDao vendedorDao = FabricaDao.criarVendedorDao();
 
-		// busca pelo id
+		// busca pelo id		
 		System.out.println("======== Teste 1: Busca Por ID ========");
-		Vendedor vendedor = vendedorDao.buscaPorId(2);
+		Vendedor vendedor = vendedorDao.buscaPorId(11);
 		System.out.println(vendedor);
-
+		
 		// busca por Id do departamento
 		System.out.println("\n======== Teste 2: Busca Por ID do Departamento ========");
 		Departamento departamento = new Departamento(2, null);
@@ -40,9 +40,17 @@ public class ProgramaVendedor {
 		}
 		
 		// Inserindo Vendedor
-		System.out.println("\n======== Teste 3: Inserindo Vendedor ========");
+		System.out.println("\n======== Teste 4: Inserindo Vendedor ========");
 		Vendedor novoVendedor = new Vendedor(null, "Gregorio", "gregorio@gmail.com", new Date(), 4000.0, departamento);
 		vendedorDao.inserir(novoVendedor);
-		System.out.println("Iserido! novo id = "+ novoVendedor.getId());
+		System.out.println("Iserido! novo id = "+ novoVendedor.getId());	
+		
+		// Atualiza o Vendedor pelo seu Id
+		System.out.println("\n======== Teste 5: Atualiza o Vendedor ========");
+		// utilizando a variavel vendedor
+		vendedor = vendedorDao.buscaPorId(1); // busca o vendedor com Id definido
+		vendedor.setNome("joao Batista da Silva"); // definindo para alterar
+		vendedorDao.atualizar(vendedor);
+		System.out.println("Atualizado com Sucesso!");
 	}
 }

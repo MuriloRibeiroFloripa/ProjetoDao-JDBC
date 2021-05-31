@@ -34,32 +34,31 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 	}
 
 	// Implementação dos metodos
-	
+
 	// Inserir Vendedor
 	@Override
 	public void inserir(Vendedor obj) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement(
-					"INSERT INTO vendedor "
+			st = conn.prepareStatement("INSERT INTO vendedor "
 					+ "(Nome, Email, DataNascimento, BaseSalario, DepartamentoId) "
-					+ "VALUES "
-					+ "(?,?,?,?,?)", 
+					+ "VALUES " + "(?,?,?,?,?)",
 					Statement.RETURN_GENERATED_KEYS);// Coloca o Id do novo vendedor inserido.
-			//Configuração dos ? (interrogações);
+			
+			// Configuração dos ? (interrogações);
 			st.setString(1, obj.getNome());
 			st.setString(2, obj.getEmail());
 			st.setDate(3, new java.sql.Date(obj.getdataNascimento().getTime()));
 			st.setDouble(4, obj.getBaseSalarial());
 			st.setInt(5, obj.getDepartamento().getId()); // apartir do departamento que eu acesso o Id, navegando Obj
-			
+
 			// executar
 			int linhasAfetadas = st.executeUpdate();
-			
+
 			// testando
 			if (linhasAfetadas > 0) {
 				ResultSet rs = st.getGeneratedKeys();
-				if(rs.next()) {
+				if (rs.next()) {
 					int id = rs.getInt(1);
 					obj.setId(id);
 				}
@@ -70,20 +69,41 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 			else {
 				throw new DbException("Erro Inesperado! Nenhuma Linha foi Afetada!");
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		}
-		//Fechando o recurso Startement
+		// Fechando o recurso Startement
 		finally {
 			DB.closeStatement(st);
 		}
 	}
 
+	// Metodo atualiza Vendedor pelo Id
 	@Override
 	public void atualizar(Vendedor obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("UPDATE vendedor "
+					+ "SET Nome = ?, Email = ?, DataNascimento = ?, BaseSalario = ?, DepartamentoId = ? "
+					+ "WHERE Id = ?");
 
+			// Configuração dos ? (interrogações);
+			st.setString(1, obj.getNome());
+			st.setString(2, obj.getEmail());
+			st.setDate(3, new java.sql.Date(obj.getdataNascimento().getTime()));
+			st.setDouble(4, obj.getBaseSalarial());
+			st.setInt(5, obj.getDepartamento().getId()); // apartir do departamento que eu acesso o Id, navegando Obj
+			st.setInt(6, obj.getId());
+
+			st.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		// Fechando o recurso Startement
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
@@ -98,8 +118,10 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 		ResultSet rs = null; // Tras os dados em formato tabela
 		try {
 			st = conn.prepareStatement(
-					"SELECT vendedor.*,departamento.Nome as DepNome " + "FROM vendedor INNER JOIN departamento "
-							+ "ON vendedor.DepartamentoId = departamento.Id " + "WHERE vendedor.Id = ?");
+					"SELECT vendedor.*,departamento.Nome as DepNome " 
+					+ "FROM vendedor INNER JOIN departamento "
+					+ "ON vendedor.DepartamentoId = departamento.Id " 
+					+ "WHERE vendedor.Id = ?");
 
 			st.setInt(1, id);
 			rs = st.executeQuery();
@@ -159,31 +181,32 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 		ResultSet rs = null; // Tras os dados em formato tabela
 		try {
 			st = conn.prepareStatement(
-					"SELECT vendedor.*,departamento.Nome as DepNome "
+					"SELECT vendedor.*,departamento.Nome as DepNome " 
 					+ "FROM vendedor INNER JOIN departamento "
-					+ "ON vendedor.DepartamentoId = departamento.Id "
-					+ "ORDER BY Nome;");			
-			
-			//executa minha Query;
+					+ "ON vendedor.DepartamentoId = departamento.Id " 
+					+ "ORDER BY Nome;");
+
+			// executa minha Query;
 			rs = st.executeQuery();
-			
+
 			// Declarando a lista para receber os resultados da execução da Query
 			List<Vendedor> list = new ArrayList<>();
-			
-			// função map para controlar a referencia para departamento para não se repetir, 
-			// Sem multiplicar os departamentos, e sim referenciar o objeto Certo na memoria.
+
+			// função map para controlar a referencia para departamento para não se repetir,
+			// Sem multiplicar os departamentos, e sim referenciar o objeto Certo na
+			// memoria.
 			// estrutura map vazia com chave Integer do Id e Valor Departamento
 			Map<Integer, Departamento> map = new HashMap<>();
-			
+
 			// Percorrer os resultados enquanto tiver um proximo
-			while(rs.next()) { 
+			while (rs.next()) {
 
 				// Controle para não repetir o departamento testando se ele ja existe
 				// Guardando na estrutura Map, qualquer departamento que for instanciado.
 				// Pela estrutura while e com get ele verifica o id do departamento.
 				// reaproveita o departamento se ele ja existe.
-				Departamento dep =  map.get(rs.getInt("DepartamentoId"));
-				
+				Departamento dep = map.get(rs.getInt("DepartamentoId"));
+
 				// se o retorno da instanciação do objeto Departamento dep for null
 				// porem se ele ja existir o map, vai pegar ele.
 				if (dep == null) {
@@ -192,7 +215,7 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 					// guarda dentro do Map o departamento
 					map.put(rs.getInt("DepartamentoId"), dep);
 				}
-				
+
 				// Intancia o vendedor apontando para dep
 				// seja ele existente ou novo departamento criado
 				Vendedor obj = instanciaVendedor(rs, dep);
@@ -204,7 +227,7 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 			// Retorna a lista;
 			return list;
 
-		// Capturando SQLexception, lanca exception personalizada.
+			// Capturando SQLexception, lanca exception personalizada.
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage()); // lança exceção personalizada
 		}
@@ -221,33 +244,31 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 		PreparedStatement st = null;
 		ResultSet rs = null; // Tras os dados em formato tabela
 		try {
-			st = conn.prepareStatement(
-					"SELECT vendedor.*,departamento.Nome as DepNome "
-					+ "FROM vendedor INNER JOIN departamento "
-					+ "ON vendedor.DepartamentoId = departamento.Id "
-					+ "WHERE DepartamentoId = ? "
-					+ "ORDER BY Nome;");			
+			st = conn.prepareStatement("SELECT vendedor.*,departamento.Nome as DepNome "
+					+ "FROM vendedor INNER JOIN departamento " + "ON vendedor.DepartamentoId = departamento.Id "
+					+ "WHERE DepartamentoId = ? " + "ORDER BY Nome;");
 			st.setInt(1, departamento.getId());
-			//executa minha Query;
+			// executa minha Query;
 			rs = st.executeQuery();
-			
+
 			// Declarando a lista para receber os resultados da execução da Query
 			List<Vendedor> list = new ArrayList<>();
-			
-			// função map para controlar a referencia para departamento para não se repetir, 
-			// Sem multiplicar os departamentos, e sim referenciar o objeto Certo na memoria.
+
+			// função map para controlar a referencia para departamento para não se repetir,
+			// Sem multiplicar os departamentos, e sim referenciar o objeto Certo na
+			// memoria.
 			// estrutura map vazia com chave Integer do Id e Valor Departamento
 			Map<Integer, Departamento> map = new HashMap<>();
-			
+
 			// Percorrer os resultados enquanto tiver um proximo
-			while(rs.next()) { 
+			while (rs.next()) {
 
 				// Controle para não repetir o departamento testando se ele ja existe
 				// Guardando na estrutura Map, qualquer departamento que for instanciado.
 				// Pela estrutura while e com get ele verifica o id do departamento.
 				// reaproveita o departamento se ele ja existe.
-				Departamento dep =  map.get(rs.getInt("DepartamentoId"));
-				
+				Departamento dep = map.get(rs.getInt("DepartamentoId"));
+
 				// se o retorno da instanciação do objeto Departamento dep for null
 				// porem se ele ja existir o map, vai pegar ele.
 				if (dep == null) {
@@ -256,7 +277,7 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 					// guarda dentro do Map o departamento
 					map.put(rs.getInt("DepartamentoId"), dep);
 				}
-				
+
 				// Intancia o vendedor apontando para dep
 				// seja ele existente ou novo departamento criado
 				Vendedor obj = instanciaVendedor(rs, dep);
@@ -268,7 +289,7 @@ public class VendedorDaoImplentacaoJDBC implements VendedorDao {
 			// Retorna a lista;
 			return list;
 
-		// Capturando SQLexception, lanca exception personalizada.
+			// Capturando SQLexception, lanca exception personalizada.
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage()); // lança exceção personalizada
 		}

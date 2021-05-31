@@ -56,3 +56,8 @@ INSERT INTO vendedor
 (Nome, Email, DataNascimento, BaseSalario, DepartamentoId)
 VALUES
 ('Carl Teixeira','carl@gmail.com','1988-01-15 00:00:00',2.500,4);
+
+-- atualização dos dados do vendedor pelo Id
+UPDATE vendedor
+SET Nome = 'Donaldi Santana', Email = 'donald@gmail.com', DataNascimento = '2000-01-09 00:00:00', BaseSalario = 5000.0, DepartamentoId = 3
+WHERE Id = 5;
