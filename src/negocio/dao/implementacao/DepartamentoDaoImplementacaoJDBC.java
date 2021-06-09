@@ -24,10 +24,40 @@ public class DepartamentoDaoImplementacaoJDBC implements DepartamentoDao{
 	}
 
 	// Implementação dos metodos
+	
+	//inserir Departamento
 	@Override
 	public void inserir(Departamento obj) {
-		// TODO Auto-generated method stub
-		
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(
+				"INSERT INTO departamento " +
+				"(Nome) " +
+				"VALUES " +
+				"(?)", 
+				Statement.RETURN_GENERATED_KEYS);
+
+			st.setString(1, obj.getNome());
+
+			int rowsAffected = st.executeUpdate();
+			
+			if (rowsAffected > 0) {
+				ResultSet rs = st.getGeneratedKeys();
+				if (rs.next()) {
+					int id = rs.getInt(1);
+					obj.setId(id);
+				}
+			}
+			else {
+				throw new DbException("Unexpected error! No rows affected!");
+			}
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} 
+		finally {
+			DB.closeStatement(st);
+		}		
 	}
 
 	@Override
@@ -42,6 +72,7 @@ public class DepartamentoDaoImplementacaoJDBC implements DepartamentoDao{
 		
 	}
 
+	//Busca departamento por id
 	@Override
 	public Departamento buscaPorId(Integer id) {
 
