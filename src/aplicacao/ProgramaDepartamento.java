@@ -7,9 +7,6 @@ import negocio.dao.DepartamentoDao;
 import negocio.dao.FabricaDao;
 import negocio.entidade.Departamento;
 
-
-
-
 public class ProgramaDepartamento {
 
 	public static void main(String[] args) {
@@ -38,5 +35,13 @@ public class ProgramaDepartamento {
 		dep2.setNome("Futebol");
 		departamentoDao.atualizar(dep2);
 		System.out.println("Atualizado com Sucesso!");
+		
+		System.out.println("\n=== TESTE 5: apaga Departamento pelo Id =======");
+		System.out.print("Insira O Id para excluir o Departamento ");
+		int id = sc.nextInt();
+		departamentoDao.apagarPorId(id);
+		System.out.println("Apagado Com Sucesso!");
+		
+		sc.close();
 	}
 }
