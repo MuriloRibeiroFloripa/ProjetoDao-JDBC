@@ -11,7 +11,7 @@ public interface DepartamentoDao {
 	// Para manipular os atributos do Departamento.
 	void inserir(Departamento obj);
 	void atualizar(Departamento obj);
-	void apagarPorId(Departamento id);
+	void apagarPorId(Integer id);
 	Departamento buscaPorId(Integer id);
-	List<Departamento> buscaTodos();	
+	List<Departamento> buscaTodos();
 }

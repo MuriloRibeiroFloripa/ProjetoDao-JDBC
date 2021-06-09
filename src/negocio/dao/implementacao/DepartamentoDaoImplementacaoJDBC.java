@@ -10,6 +10,7 @@ import java.util.List;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import negocio.dao.DepartamentoDao;
 import negocio.entidade.Departamento;
 
@@ -83,11 +84,24 @@ public class DepartamentoDaoImplementacaoJDBC implements DepartamentoDao{
 		}
 	}
 	
-	
+	//Apaga o departamento pelo ID
 	@Override
-	public void apagarPorId(Departamento id) {
-		// TODO Auto-generated method stub
-		
+	public void apagarPorId(Integer id) {
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(
+				"DELETE FROM departamento WHERE Id = ?");
+
+			st.setInt(1, id);
+
+			st.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DbIntegrityException(e.getMessage());
+		} 
+		finally {
+			DB.closeStatement(st);
+		}		
 	}
 
 	//Busca departamento por id
