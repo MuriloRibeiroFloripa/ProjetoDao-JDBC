@@ -15,7 +15,7 @@ public class ProgramaVendedor {
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
-		
+
 		// instanciado a fabricaDao
 		VendedorDao vendedorDao = FabricaDao.criarVendedorDao();
 
