@@ -13,13 +13,13 @@ import db.DbException;
 import negocio.dao.DepartamentoDao;
 import negocio.entidade.Departamento;
 
-public class DepartamentoDaoImplementaçãoJDBC implements DepartamentoDao{
+public class DepartamentoDaoImplementacaoJDBC implements DepartamentoDao{
 	
 	// Implementação da dependecia do DAO com a conexão
 	// Para ter a coneção a disposição nesta classe.
 	private Connection conn;
 	
-	public DepartamentoDaoImplementaçãoJDBC(Connection conn) {
+	public DepartamentoDaoImplementacaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
 
