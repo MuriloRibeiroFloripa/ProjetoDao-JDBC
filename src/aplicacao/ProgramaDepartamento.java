@@ -27,6 +27,12 @@ public class ProgramaDepartamento {
 		for (Departamento d : list) {
 			System.out.println(d);
 		}
+		
+		System.out.println("\n=== TESTE 3: inserir Departamento =======");
+		Departamento newDepartamento = new Departamento(null, "Musicas");
+		departamentoDao.inserir(newDepartamento);
+		System.out.println("Inserido! Novo Id: " + newDepartamento.getId());
+
 	}
 
 }
