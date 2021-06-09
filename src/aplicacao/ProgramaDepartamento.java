@@ -1,5 +1,6 @@
 package aplicacao;
 
+import java.util.List;
 import java.util.Scanner;
 
 import negocio.dao.DepartamentoDao;
@@ -20,6 +21,12 @@ public class ProgramaDepartamento {
 		System.out.println("=== TESTE 1: Busca por Id =======");
 		Departamento dep = departamentoDao.buscaPorId(1);
 		System.out.println(dep);
+		
+		System.out.println("\n=== TESTe 2: Busca Todos os Departamentos =======");
+		List<Departamento> list = departamentoDao.buscaTodos();
+		for (Departamento d : list) {
+			System.out.println(d);
+		}
 	}
 
 }
