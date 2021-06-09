@@ -32,7 +32,11 @@ public class ProgramaDepartamento {
 		Departamento newDepartamento = new Departamento(null, "Musicas");
 		departamentoDao.inserir(newDepartamento);
 		System.out.println("Inserido! Novo Id: " + newDepartamento.getId());
-
+		
+		System.out.println("\n=== TESTE 4: Atualiza Departamento pelo Id =======");
+		Departamento dep2 = departamentoDao.buscaPorId(1);
+		dep2.setNome("Futebol");
+		departamentoDao.atualizar(dep2);
+		System.out.println("Atualizado com Sucesso!");
 	}
-
 }
