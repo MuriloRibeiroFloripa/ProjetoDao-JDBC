@@ -69,10 +69,32 @@ public class DepartamentoDaoImplementacaoJDBC implements DepartamentoDao{
 		}
 	}
 
+	//Busca Todos os Departamentos 
 	@Override
 	public List<Departamento> buscaTodos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+				"SELECT * FROM departamento ORDER BY Nome");
+			rs = st.executeQuery();
 
+			List<Departamento> list = new ArrayList<>();
+
+			while (rs.next()) {
+				Departamento obj = new Departamento();
+				obj.setId(rs.getInt("Id"));
+				obj.setNome(rs.getString("Nome"));
+				list.add(obj);
+			}
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+	}
 }
